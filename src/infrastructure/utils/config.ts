@@ -7,5 +7,19 @@ import { ChatController } from '../../interface/chat-controller';
 import { CreateChatUseCase } from '../../application/use-cases/create-chat-use-case';
 
 export function configureDependencies() {
-    //seu codigo aqui
+    const despesaRepository = new RepositoryData();
+    const createDespesaUseCase = new CreateDespesaUseCase(despesaRepository);
+    const listAllDespesasUseCase = new GetDespesasByUserUseCase(despesaRepository);
+
+    const chatRepository = new RepositoryAI();
+    const createChatUseCase = new CreateChatUseCase(chatRepository, despesaRepository);
+
+    const despesaController = new DespesaController(createDespesaUseCase, listAllDespesasUseCase);
+    const chatController = new ChatController(createChatUseCase);
+
+    return {
+        despesaController,
+        chatController
+    }
+
 } 

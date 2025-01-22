@@ -1,20 +1,14 @@
-import { ChatRepository } from "../../application/repositores/chat-repository";
-import { Despesa } from "../../domain/despesa";
-import { ai } from '../genai/connection'
-import { v4 as uuidv4 } from 'uuid';
-
-interface MyState {
-    transactions: Despesa[];
-}
-
-export class RepositoryAI implements ChatRepository {
-    async open(transactions: Despesa[], uid: string, messageUser: string): Promise<any> {
-        const session = ai.createSession<MyState>({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RepositoryAI = void 0;
+const connection_1 = require("../genai/connection");
+const uuid_1 = require("uuid");
+class RepositoryAI {
+    async open(transactions, uid, messageUser) {
+        const session = connection_1.ai.createSession({
             initialState: { transactions: transactions },
         });
-
-        const sessionId = uuidv4();
-
+        const sessionId = (0, uuid_1.v4)();
         const prompt = `
             Você é um consultor financeiro virtual especializado em ajudar usuárias a gerenciar suas finanças pessoais. Com base nas transações fornecidas, responda de forma clara, objetiva e direta, focando nos pontos principais solicitados.
 
@@ -49,19 +43,13 @@ export class RepositoryAI implements ChatRepository {
             - Pergunta: "Se eu reduzir meus gastos em 10%, quanto consigo poupar em um ano?"
             Resposta: "Reduzindo seus gastos em 10%, você economizaria R$ 155,08 por mês, ou aproximadamente R$ 1861,00 por ano."
         `;
-
         const chat = session.chat();
-
-        const messages: Array<{ content: string, timestamp: string }> = [];
-
+        const messages = [];
         const { text } = await chat.send(prompt);
-
         messages.push({
             content: text,
             timestamp: new Date().toISOString(),
         });
-    
-
         return {
             sessionId,
             userId: uid,
@@ -69,3 +57,4 @@ export class RepositoryAI implements ChatRepository {
         };
     }
 }
+exports.RepositoryAI = RepositoryAI;

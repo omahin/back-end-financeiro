@@ -1,6 +1,8 @@
-import { model, Schema } from 'mongoose'
-
-const DespesaSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DespesaModel = void 0;
+const mongoose_1 = require("mongoose");
+const DespesaSchema = new mongoose_1.Schema({
     descricao: {
         type: String,
         require: true
@@ -25,7 +27,5 @@ const DespesaSchema = new Schema({
         type: String,
         require: true
     }
-
-})
-
-export const DespesaModel = model('despesas', DespesaSchema)
+});
+exports.DespesaModel = (0, mongoose_1.model)('despesas', DespesaSchema);
